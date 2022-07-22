@@ -1,0 +1,70 @@
+{
+  "format": 1,
+  "restore": {
+    "C:\\Users\\lesku\\Documents\\Projetos\\Processo Stefanini\\Stefanini\\Stefanini.Domain\\Stefanini.Domain.csproj": {}
+  },
+  "projects": {
+    "C:\\Users\\lesku\\Documents\\Projetos\\Processo Stefanini\\Stefanini\\Stefanini.Domain\\Stefanini.Domain.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "C:\\Users\\lesku\\Documents\\Projetos\\Processo Stefanini\\Stefanini\\Stefanini.Domain\\Stefanini.Domain.csproj",
+        "projectName": "Stefanini.Domain",
+        "projectPath": "C:\\Users\\lesku\\Documents\\Projetos\\Processo Stefanini\\Stefanini\\Stefanini.Domain\\Stefanini.Domain.csproj",
+        "packagesPath": "C:\\Users\\lesku\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\lesku\\Documents\\Projetos\\Processo Stefanini\\Stefanini\\Stefanini.Domain\\obj\\",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "C:\\Users\\lesku\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net6.0"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {},
+          "https://pesquisaeinovacao.sondait.com.br/I9.Nuget.Server/nuget": {},
+          "https://pkgs.dev.azure.com/sondabtinnovation/_packaging/I9.Artifacts.Server/nuget/v3/index.json": {}
+        },
+        "frameworks": {
+          "net6.0": {
+            "targetAlias": "net6.0",
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "net6.0": {
+          "targetAlias": "net6.0",
+          "dependencies": {
+            "Microsoft.EntityFrameworkCore": {
+              "target": "Package",
+              "version": "[6.0.7, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.302\\RuntimeIdentifierGraph.json"
+        }
+      }
+    }
+  }
+}
