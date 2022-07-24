@@ -17,7 +17,7 @@ A connection string para acessar o banco **(localdb)\MSSQLLocalDB** com autentic
 
 ![Diagrama UML](https://user-images.githubusercontent.com/29407031/156945886-01367072-7991-4f13-b54a-f7be7812a393.png)
 
-![Postman](Stefanini/Assets/Stefanini.json)
+![Postman](Stefanini/Stefanini/Assets/Stefanini.json)
 
 A camada de aplicação **(Stefanini.API)** é onde estão os controllers.
 
