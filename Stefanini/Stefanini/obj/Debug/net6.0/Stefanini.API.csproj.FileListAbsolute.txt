@@ -1,3 +1,4 @@
+C:\Users\lesku\Documents\Projetos\Processo Stefanini\Stefanini\Stefanini\bin\Debug\net6.0\web.config
 C:\Users\lesku\Documents\Projetos\Processo Stefanini\Stefanini\Stefanini\bin\Debug\net6.0\appsettings.json
 C:\Users\lesku\Documents\Projetos\Processo Stefanini\Stefanini\Stefanini\bin\Debug\net6.0\Stefanini.API.exe
 C:\Users\lesku\Documents\Projetos\Processo Stefanini\Stefanini\Stefanini\bin\Debug\net6.0\Stefanini.API.deps.json
@@ -65,3 +66,4 @@ C:\Users\lesku\Documents\Projetos\Processo Stefanini\Stefanini\Stefanini\obj\Deb
 C:\Users\lesku\Documents\Projetos\Processo Stefanini\Stefanini\Stefanini\obj\Debug\net6.0\Stefanini.API.pdb
 C:\Users\lesku\Documents\Projetos\Processo Stefanini\Stefanini\Stefanini\obj\Debug\net6.0\Stefanini.API.genruntimeconfig.cache
 C:\Users\lesku\Documents\Projetos\Processo Stefanini\Stefanini\Stefanini\obj\Debug\net6.0\ref\Stefanini.API.dll
+C:\Users\lesku\Documents\Projetos\Processo Stefanini\Stefanini\Stefanini\bin\Debug\net6.0\Assets\Stefanini - Localhost.postman_collection.json

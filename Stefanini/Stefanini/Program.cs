@@ -55,7 +55,6 @@ app.UseSwaggerUI(opt =>
         opt.SwaggerEndpoint(
         $"/swagger/{description.GroupName}/swagger.json",
         description.GroupName.ToUpperInvariant());
-        opt.RoutePrefix = string.Empty;
     }
 });
 

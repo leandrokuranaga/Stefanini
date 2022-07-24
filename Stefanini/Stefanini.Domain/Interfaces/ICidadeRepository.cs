@@ -6,6 +6,6 @@ namespace Stefanini.Domain.Interfaces
     {
         Task<IEnumerable<Cidade>> GetAllCidades();
         Task<Cidade> GetCidadeById(int id);
-        Task AddCidade(Cidade cidade);
+        Task<bool> AddCidade(Cidade cidade);
     }
 }

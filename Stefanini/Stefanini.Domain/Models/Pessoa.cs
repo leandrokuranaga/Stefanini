@@ -15,7 +15,7 @@ namespace Stefanini.Domain.Models
         [StringLength(200, ErrorMessage = "O campo {0} precisa ser uma string com máximo de 200 caracteres")]
         public string CPF { get; set; }
         [ForeignKey("Cidade_FK")]
-        public int Id_Cidade { get; set; }
+        public int? Id_Cidade { get; set; }
         [Required]
         [Range(0, int.MaxValue, ErrorMessage = "Por favor digite uma idade válida")]
         public int Idade { get; set; }

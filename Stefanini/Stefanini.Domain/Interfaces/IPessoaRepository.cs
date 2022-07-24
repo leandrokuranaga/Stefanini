@@ -6,9 +6,9 @@ namespace Stefanini.Domain.Interfaces
     {
         Task<IEnumerable<Pessoa>> GetAllPessoas();
         Task<Pessoa> GetPessoaById(int id);
-        Task DeletePessoaById(int id);
-        Task AddPessoa(Pessoa pessoa);
-        Task UpdatePessoa(Pessoa pessoa);
+        Task<bool> DeletePessoaById(int id);
+        Task<bool> AddPessoa(Pessoa pessoa);
+        Task<bool> UpdatePessoa(Pessoa pessoa);
         Task<Cidade> GetCityByPerson(int idCity);
     }
 }

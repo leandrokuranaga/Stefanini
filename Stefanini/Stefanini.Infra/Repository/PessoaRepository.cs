@@ -9,22 +9,45 @@ namespace Stefanini.Infra.Repository
     {
         private readonly DatabaseContext _context;
 
-        public PessoaRepository (DatabaseContext context)
+        public PessoaRepository(DatabaseContext context)
         {
             _context = context;
             _context.Database.EnsureCreated();
         }
 
-        public async Task AddPessoa(Pessoa pessoa)
+        public async Task<bool> AddPessoa(Pessoa pessoa)
         {
-             _context.Pessoa.AddAsync(pessoa);
+
+            var person = await _context
+                                .Pessoa
+                                .AsNoTracking()
+                                .FirstOrDefaultAsync(p => p.CPF == pessoa.CPF);
+
+            if (person != null)
+                return false;
+
+            var addedPerson = _context.Pessoa.AddAsync(pessoa);
+
             await _context.SaveChangesAsync();
+
+            return true;
         }
 
-        public async Task DeletePessoaById(int id)
+        public async Task<bool> DeletePessoaById(int id)
         {
-            _context.Remove(new Pessoa { Id = id });
+
+            var pessoa = await _context
+                                .Pessoa
+                                .AsNoTracking()
+                                .FirstOrDefaultAsync(p => p.Id == id);
+
+            if (pessoa == null)
+                return false;
+
+            var x = _context.Remove(new Pessoa { Id = id });
             await _context.SaveChangesAsync();
+
+            return true;
         }
 
         public async Task<IEnumerable<Pessoa>> GetAllPessoas()
@@ -35,7 +58,7 @@ namespace Stefanini.Infra.Repository
                                 .ToListAsync();
 
             return pessoas;
-        } 
+        }
 
         public async Task<Pessoa> GetPessoaById(int id)
         {
@@ -57,11 +80,22 @@ namespace Stefanini.Infra.Repository
             return cidade;
         }
 
-        public async Task UpdatePessoa(Pessoa pessoa)
+        public async Task<bool> UpdatePessoa(Pessoa pessoa)
         {
+            var updated = await _context
+                                .Pessoa
+                                .AsNoTracking()
+                                .FirstOrDefaultAsync(p => p.Id == pessoa.Id);
+
+            if (updated == null)
+                return false;
+
             _context.Pessoa.Update(pessoa);
             await _context.SaveChangesAsync();
+
+            return true;
         }
+
 
     }
 }

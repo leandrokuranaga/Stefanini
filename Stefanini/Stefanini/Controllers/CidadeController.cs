@@ -21,6 +21,10 @@ namespace Stefanini.Controllers
         public async Task<ActionResult<Cidade>> GetAllCities()
         {
             var cities = await _cidadeRepository.GetAllCidades();
+
+            if (cities == null)
+                return NotFound();
+
             return Ok(cities);
         }
 
@@ -29,6 +33,10 @@ namespace Stefanini.Controllers
         public async Task<ActionResult<Cidade>> GetCityById(int id)
         {
             var city = await _cidadeRepository.GetCidadeById(id);
+            
+            if (city == null)
+                return NotFound();
+
             return Ok(city);
         }
 
@@ -36,7 +44,11 @@ namespace Stefanini.Controllers
         [Route("addCity")]
         public async Task<ActionResult> AddCity(Cidade cidade)
         {
-            await _cidadeRepository.AddCidade(cidade);
+            var city = await _cidadeRepository.AddCidade(cidade);
+
+            if (!city)
+                return StatusCode(400);
+
             return Ok(cidade);
         }
 

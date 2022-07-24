@@ -21,6 +21,10 @@ namespace Stefanini.Controllers
         public async Task<ActionResult<Pessoa>> GetAllPeople()
         {
             var people = await _pessoaRepository.GetAllPessoas();
+
+            if (people == null)
+                return NotFound();
+
             return Ok(people);
         }
 
@@ -29,6 +33,10 @@ namespace Stefanini.Controllers
         public async Task<ActionResult<Pessoa>> GetPersonById(int id)
         {
             var person = await _pessoaRepository.GetPessoaById(id);
+
+            if(person == null)
+                return NotFound();
+
             return Ok(person);
         }
 
@@ -36,7 +44,11 @@ namespace Stefanini.Controllers
         [Route("addPerson")]
         public async Task<ActionResult> AddPerson(Pessoa pessoa)
         {
-            await _pessoaRepository.AddPessoa(pessoa);
+            var person = await _pessoaRepository.AddPessoa(pessoa);
+
+            if (!person)
+                return StatusCode(400);
+
             return Ok(pessoa);
         }
 
@@ -44,7 +56,11 @@ namespace Stefanini.Controllers
         [Route("updatePerson")]
         public async Task<ActionResult<Pessoa>> UpdatePerson(Pessoa pessoa)
         {
-            await _pessoaRepository.UpdatePessoa(pessoa);
+            var updated = await _pessoaRepository.UpdatePessoa(pessoa);
+
+            if (!updated)
+                return NotFound();
+
             return Ok(pessoa);
         }
 
@@ -52,8 +68,12 @@ namespace Stefanini.Controllers
         [Route("deletePerson")]
         public async Task<ActionResult<Pessoa>> DeletePerson(int id)
         {
-            await _pessoaRepository.DeletePessoaById(id);
-            return Ok(id);
+            var deleted = await _pessoaRepository.DeletePessoaById(id);
+
+            if(deleted == false)
+                return NotFound();
+
+            return Ok(true);
         }
 
         [HttpGet]
@@ -61,6 +81,10 @@ namespace Stefanini.Controllers
         public async Task<ActionResult<Pessoa>> GetCityByPerson(int id)
         {
             var city = await _pessoaRepository.GetCityByPerson(id);
+
+            if (city == null)
+                return NotFound();
+
             return Ok(city);
         }
     }

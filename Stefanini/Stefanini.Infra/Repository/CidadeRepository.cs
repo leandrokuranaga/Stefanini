@@ -15,14 +15,17 @@ namespace Stefanini.Infra.Repository
             _context.Database.EnsureCreated();
         }
 
-        public async Task AddCidade(Cidade cidade)
+        public async Task<bool> AddCidade(Cidade cidade)
         {
-             _context.Cidade.AddAsync(cidade);
+            _context.Cidade.AddAsync(cidade);
             await _context.SaveChangesAsync();
+
+            return true;
         }
 
         public async Task<IEnumerable<Cidade>> GetAllCidades()
         {
+
             var cities = await _context
                                 .Cidade
                                 .AsNoTracking()
