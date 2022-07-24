@@ -2,7 +2,7 @@
 
 ---
 
-Para o uso e teste da aplicação favor utilizar o comando **git clone [https://github.com/lekuranaga/Stefanini.git]**
+Para o uso e teste da aplicação favor utilizar o comando **git clone https://github.com/lekuranaga/Stefanini.git**
 
 O ambiente utilizado para desenvolver a aplicação foi o **Windows 11.**
 
