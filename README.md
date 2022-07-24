@@ -2,17 +2,17 @@
 
 ---
 
-Para o uso e teste da aplicação favor utilizar o comando **git clone https://github.com/lekuranaga/HiringSonda.git**
+Para o uso e teste da aplicação favor utilizar o comando **git clone [https://github.com/lekuranaga/HiringSonda.git](https://github.com/lekuranaga/Stefanini.git)**
 
 O ambiente utilizado para desenvolver a aplicação foi o **Windows 11.**
 
-Para o desenvolvimento foi utilizado o **SQL Server Express 2019** como banco de dados e o projeto foi desenvolvido utilizando o **Visual Studio 2022** a base criada é a **SondaLeandroKuranaga** e é configurável através do arquivo **appsettings.json**.
+Para o desenvolvimento foi utilizado o **SQL Server Express 2019** como banco de dados e o projeto foi desenvolvido utilizando o **Visual Studio 2022** a base criada é a **StefaniniLeandroKuranaga** e é configurável através do arquivo **appsettings.json**.
 
 ## Projeto
 
 ---
 
-O projeto foi dividido em camadas, sendo utilizado a **onion architecture**, além de utilizar **Entity Framework Core (Design, Relational, SqlServer, Tools)** juntamente com a migration **add-migration SondaHiring**.
+O projeto foi dividido em camadas, sendo utilizado a **onion architecture**, além de utilizar **Entity Framework Core (Design, Relational, SqlServer, Tools)** juntamente com a migration.
 
 A Estrutura do banco de dados na imagem abaixo.
 
