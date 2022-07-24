@@ -18,9 +18,9 @@ A Estrutura do banco de dados na imagem abaixo.
 
 A connection string para acessar o banco **(localdb)\MSSQLLocalDB** com autenticação windows, serve para o sql server 2017 e 2019.
 
-![Diagrama UML](Stefanini/Stefanini/Assets/Banco.png)
+![Diagrama UML](https://user-images.githubusercontent.com/29407031/156945886-01367072-7991-4f13-b54a-f7be7812a393.png)
 
-![Collections postman](Stefanini/Stefanini/Assets/Stefanini - Localhost.postman_collection.json)
+![Collections postman](Stefanini/Assets/Stefanini - Localhost.postman_collection.json)
 
 A camada de aplicação **(Stefanini.API)** é onde estão os controllers.
 
