@@ -21,7 +21,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infra Layer", "Infra Layer"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{6691D9A2-DE46-438B-ADFC-35EA4747FF0A}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Stefanini.Application", "src\Stefanini.Application\Stefanini.Application.csproj", "{1E3CF718-8500-412E-87A5-0E312438A2BA}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Stefanini.Application", "src\Stefanini.Application\Stefanini.Application.csproj", "{1E3CF718-8500-412E-87A5-0E312438A2BA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Stefanini.Infra.CrossCutting.IoC", "src\Stefanini.Infra.CrossCutting.IoC\Stefanini.Infra.CrossCutting.IoC.csproj", "{6C80FB76-31A4-4F79-AE2C-6D0D7FE16DC0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -49,6 +51,10 @@ Global
 		{1E3CF718-8500-412E-87A5-0E312438A2BA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1E3CF718-8500-412E-87A5-0E312438A2BA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1E3CF718-8500-412E-87A5-0E312438A2BA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6C80FB76-31A4-4F79-AE2C-6D0D7FE16DC0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6C80FB76-31A4-4F79-AE2C-6D0D7FE16DC0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6C80FB76-31A4-4F79-AE2C-6D0D7FE16DC0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6C80FB76-31A4-4F79-AE2C-6D0D7FE16DC0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -59,6 +65,7 @@ Global
 		{EF5DA153-4110-43D5-BB2D-4622BBBB16F9} = {8AA1BADA-2D3E-48EB-A36B-3E8228A7E746}
 		{18468C0C-064D-4010-B790-0FDAFCC26867} = {6691D9A2-DE46-438B-ADFC-35EA4747FF0A}
 		{1E3CF718-8500-412E-87A5-0E312438A2BA} = {78B4D496-316F-432B-9CA3-792D2593478F}
+		{6C80FB76-31A4-4F79-AE2C-6D0D7FE16DC0} = {8AA1BADA-2D3E-48EB-A36B-3E8228A7E746}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {A4869D0B-FE11-495D-A720-DC36AE3CCEBE}
