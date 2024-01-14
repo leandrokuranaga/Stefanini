@@ -1,4 +1,3 @@
-<<<<<<< Updated upstream
 ## Ferramentas, Banco de dados
 
 Para o uso e teste da aplicação favor utilizar o comando **git clone https://github.com/lekuranaga/Stefanini.git**
@@ -31,7 +30,6 @@ A camada de **infra (Stefanini.Infra)** é onde fica a parte de conexão com ban
 * A camada de **infra (Stefanini.Infra)** possui a dependência do projeto **domínio (Stefanini.Domain)**.
 
 * A camada de Aplicação **(Stefanini.API)** possui a dependência dos projetos **domínio (Stefanini.Domain)** e **infra (Stefanini.Infra)**.
-=======
 ## Ferramentas, Banco de dados
 
 ---
@@ -69,4 +67,3 @@ A camada de **infra (Stefanini.Infra)** é onde fica a parte de conexão com ban
 - A camada de **infra (Stefanini.Infra)** possui a dependência do projeto **domínio (Stefanini.Domain)**.
 
 - A camada de Aplicação **(Stefanini.API)** possui a dependência dos projetos **domínio (Stefanini.Domain)** e **infra (Stefanini.Infra)**.
->>>>>>> Stashed changes
