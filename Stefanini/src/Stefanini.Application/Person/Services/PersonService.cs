@@ -1,34 +1,30 @@
-﻿using Stefanini.Application.Person.Models.Request;
+﻿using Stefanini.Application.Common;
+using Stefanini.Application.Person.Models.Request;
 using Stefanini.Application.Person.Models.Response;
+using Stefanini.Application.Validators;
 using Stefanini.Domain.PersonAggregate;
+using Stefanini.Domain.SeedWork.Notification;
 
 namespace Stefanini.Application.Person.Services
 {
-    public class PersonService : IPersonService
+    public class PersonService(IPersonRepository personRepository, INotification notification) : BaseService(notification), IPersonService
     {
-        private readonly IPersonRepository _personRepository;
+        private readonly INotification _notification = notification;
 
-        public PersonService(IPersonRepository personRepository)
-        {
-            _personRepository = personRepository;
-        }
+        private readonly IPersonRepository _personRepository = personRepository;
 
         public async Task AddPerson(PersonRequest person)
         {
             try
             {
-                PersonDomain personDomain = new PersonDomain
-                { 
-                    Age = person.Age,
-                    Name = person.Name,
-                    CPF = person.CPF,
-                };
+                Validate(person, new PersonRequestValidator());
+                var personDomain = (PersonDomain)person;
 
                 await _personRepository.InsertOrUpdateAsync(personDomain);
             }
-            catch (Exception ex)
+            catch (Exception ex) 
             {
-                Console.WriteLine(ex);
+                throw new Exception(ex.Message);
             }
         }
 
@@ -42,59 +38,44 @@ namespace Stefanini.Application.Person.Services
         {
             var people = await _personRepository.GetAllAsync();
 
-            List<PersonResponse> results = new();
-
-            foreach (var person in people)
-            {
-                PersonResponse response = new()
-                { 
-                    Id = person.Id,
-                    Name = person.Name,
-                    Age = person.Age,
-                    Cpf = person.CPF,
-                };
-                results.Add(response);
-            }
+            var results = people.Select(person => (PersonResponse)person).ToList();
 
             return results;
-
         }
 
         public async Task<PersonResponse> GetPersonById(int id)
         {
             var person = await _personRepository.GetByIdAsync(id, false);
 
-            PersonResponse personResponse = new();
+            if (person is null)
+                 return null;
 
-            if (person != null)
-            {
-                personResponse.Id = person.Id;
-                personResponse.Name = person.Name;
-                personResponse.Age = person.Age;
-                personResponse.Cpf = person.CPF;             
-            }
-
-            if (person == null)
-            {
-                return null;
-            }
+            var personResponse = (PersonResponse)person;
 
             return personResponse;
         }
 
         public async Task<bool> UpdatePerson(PersonRequest person, int id)
         {
-            PersonDomain personDomain = new()
+            try
             {
-                Id = id,
-                Name = person.Name,
-                Age = person.Age,
-                CPF = person.CPF
-            };
+                Validate(person, new PersonRequestValidator());
+                var personDomain = (PersonDomain)person;
 
-            await _personRepository.UpdateAsync(personDomain);
+                await _personRepository.UpdateAsync(personDomain);
 
-            return true; 
+                return true;
+            } catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            } 
+        }
+
+        public async Task<bool> AddPersonToCity(int personId, int cityId)
+        {
+            var updatedPerson = await _personRepository.AddPersonToCity(personId, cityId);
+
+            return updatedPerson;
         }
 
     }

@@ -8,17 +8,11 @@ namespace Stefanini.Controllers
     [ApiController]
     [Route("api/v{version:apiVersion}/[controller]")]
     [ApiVersion("1")]
-    public class CityController : Controller
+    public class CityController(ICityService cityService) : Controller
     {
-        private readonly ICityService _cityService;
-
-        public CityController(ICityService cityService)
-        {
-            _cityService = cityService;
-        }
+        private readonly ICityService _cityService = cityService;
 
         [HttpGet]
-        [Route("all-cities")]
         public async Task<ActionResult<CityResponse>> GetAllCities()
         {
             var cities = await _cityService.GetAllCities();
@@ -30,7 +24,7 @@ namespace Stefanini.Controllers
         }
 
         [HttpGet]
-        [Route("city-by-id/{id}")]
+        [Route("{id}")]
         public async Task<ActionResult<CityResponse>> GetCityById(int id)
         {
             var city = await _cityService.GetCityById(id);
@@ -42,7 +36,6 @@ namespace Stefanini.Controllers
         }
 
         [HttpPost]
-        [Route("city")]
         public async Task<IActionResult> AddCity(CityRequest city)
         {
             try

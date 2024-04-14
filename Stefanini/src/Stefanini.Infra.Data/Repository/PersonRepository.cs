@@ -59,6 +59,32 @@ namespace Stefanini.Infra.Repository
             return true;
         }
 
+        public async Task<bool> AddPersonToCity(int personId, int cityId)
+        {
+            var person = await _context
+                                .Person
+                                .AsNoTracking()
+                                .FirstOrDefaultAsync(p => p.Id == personId);
+
+            if (person == null)
+                return false;
+
+            var city = await _context
+                                .City
+                                .AsNoTracking()
+                                .FirstOrDefaultAsync(c => c.Id == cityId);
+
+            if (city == null)
+                return false;
+
+            person.CityId = cityId;
+
+            _context.Person.Update(person);
+            await _context.SaveChangesAsync();
+
+            return true;
+        }
+
         
     }
 }

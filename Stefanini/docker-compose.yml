@@ -1,0 +1,8 @@
+version: '3.4'
+
+services:
+  stefanini.api:
+    image: ${DOCKER_REGISTRY-}stefaniniapi
+    build:
+      context: .
+      dockerfile: src/Stefanini.API/Dockerfile

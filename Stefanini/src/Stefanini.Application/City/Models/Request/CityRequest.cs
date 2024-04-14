@@ -1,11 +1,20 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Stefanini.Domain.CityAggregate;
+using System.ComponentModel.DataAnnotations;
 
-namespace Stefanini.Application.City.Models.Request
+namespace Stefanini.Application.City.Models.Request;
+
+public record CityRequest
 {
-    public class CityRequest
+    public string? Name { get; set; }
+    public string? UF { get; set; }
+
+    public static explicit operator CityDomain(CityRequest domain)
     {
-        public string? Name { get; set; }
-        [StringLength(2, ErrorMessage = "UF must be 2 characters long.")]
-        public string? UF { get; set; }
+        return new CityDomain
+        {
+            Name = domain.Name,
+            UF = domain.UF
+        }; 
+            
     }
 }

@@ -11,5 +11,6 @@ namespace Stefanini.Application.Person.Services
         public Task AddPerson(PersonRequest person);
         public Task<bool> UpdatePerson(PersonRequest person, int id);
         public Task<bool> DeletePerson(int id);
+        Task<bool> AddPersonToCity(int personId, int cityId);
     }
 }

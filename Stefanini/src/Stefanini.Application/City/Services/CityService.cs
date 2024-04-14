@@ -1,33 +1,30 @@
 ﻿using Stefanini.Application.City.Models.Request;
 using Stefanini.Application.City.Models.Response;
+using Stefanini.Application.Common;
+using Stefanini.Application.Validators;
 using Stefanini.Domain.CityAggregate;
+using Stefanini.Domain.SeedWork.Notification;
 
 namespace Stefanini.Application.City.Services
 {
-    public class CityService : ICityService
+    public class CityService(ICityRepository cityRepository, INotification notification) : BaseService(notification), ICityService
     {
-        private readonly ICityRepository _cityRepository;
-
-        public CityService(ICityRepository cityRepository)
-        {
-            _cityRepository = cityRepository;
-        }
+        private readonly ICityRepository _cityRepository = cityRepository;
+        private readonly INotification _notification = notification;
 
         public async Task AddCity(CityRequest city)
         {
             try
             {
-                CityDomain cityDomain = new()
-                {
-                    Name = city.Name,
-                    UF = city.UF
-                };
+                Validate(city, new CityRequestValidator());
+
+                var cityDomain = (CityDomain)city;
 
                 await _cityRepository.AddCity(cityDomain);
             }
-            catch (Exception ex)
+            catch(Exception ex)
             {
-                Console.WriteLine(ex);
+                throw new Exception(ex.Message);
             }
 
         }
@@ -36,18 +33,8 @@ namespace Stefanini.Application.City.Services
         {
             var cities = await _cityRepository.GetAllAsync();
             
-            List<CityResponse> cityResponse = [];
+            var cityResponse = cities.Select(city => (CityResponse)city).ToList();
 
-            foreach (var city in cities)
-            {
-                CityResponse cityResult = new()
-                {
-                    Id = city.Id,
-                    Name = city.Name,
-                    UF = city.UF
-                };
-                cityResponse.Add(cityResult);
-            }
             return cityResponse;
         }
 
@@ -55,12 +42,7 @@ namespace Stefanini.Application.City.Services
         {
             var city = await _cityRepository.GetByIdAsync(id, false);
 
-            CityResponse cityResponse = new()
-            {
-                Id = city.Id,
-                Name = city.Name,
-                UF = city.UF
-            };
+            var cityResponse = (CityResponse)city;
 
             return cityResponse;
         }

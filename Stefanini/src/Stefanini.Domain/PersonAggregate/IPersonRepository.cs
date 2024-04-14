@@ -7,5 +7,6 @@ namespace Stefanini.Domain.PersonAggregate
         Task<bool> DeletePersonById(int id);
         Task<bool> UpdatePerson(PersonDomain person);
         Task<CityDomain> GetCityByPerson(int idCity);
+        Task<bool> AddPersonToCity(int personId, int cityId);
     }
 }
