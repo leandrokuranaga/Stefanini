@@ -9,7 +9,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Stefanini.Domain", "src\Ste
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Stefanini.Infra.Data", "src\Stefanini.Infra.Data\Stefanini.Infra.Data.csproj", "{EF5DA153-4110-43D5-BB2D-4622BBBB16F9}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Stefanini.Tests", "src\Stefanini.Tests\Stefanini.Tests.csproj", "{18468C0C-064D-4010-B790-0FDAFCC26867}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Stefanini.Tests", "tests\Stefanini.Tests\Stefanini.Tests.csproj", "{18468C0C-064D-4010-B790-0FDAFCC26867}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Api Layer", "Api Layer", "{82B99082-6C5E-4280-A517-B8E7D76A7B2D}"
 	ProjectSection(SolutionItems) = preProject
@@ -29,6 +29,8 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Stefanini.Infra.CrossCutting.IoC", "src\Stefanini.Infra.CrossCutting.IoC\Stefanini.Infra.CrossCutting.IoC.csproj", "{6C80FB76-31A4-4F79-AE2C-6D0D7FE16DC0}"
 EndProject
 Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{77574F6C-0BBC-467B-B7CE-E1DC6A544432}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Stefanini.Infra.Utils", "src\Stefanini.Infra.Utils\Stefanini.Infra.Utils.csproj", "{FDB7A8C9-9C57-43A7-A996-FC48C02CE46D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -64,6 +66,10 @@ Global
 		{77574F6C-0BBC-467B-B7CE-E1DC6A544432}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{77574F6C-0BBC-467B-B7CE-E1DC6A544432}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{77574F6C-0BBC-467B-B7CE-E1DC6A544432}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FDB7A8C9-9C57-43A7-A996-FC48C02CE46D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FDB7A8C9-9C57-43A7-A996-FC48C02CE46D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FDB7A8C9-9C57-43A7-A996-FC48C02CE46D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FDB7A8C9-9C57-43A7-A996-FC48C02CE46D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -75,6 +81,7 @@ Global
 		{18468C0C-064D-4010-B790-0FDAFCC26867} = {6691D9A2-DE46-438B-ADFC-35EA4747FF0A}
 		{1E3CF718-8500-412E-87A5-0E312438A2BA} = {78B4D496-316F-432B-9CA3-792D2593478F}
 		{6C80FB76-31A4-4F79-AE2C-6D0D7FE16DC0} = {8AA1BADA-2D3E-48EB-A36B-3E8228A7E746}
+		{FDB7A8C9-9C57-43A7-A996-FC48C02CE46D} = {8AA1BADA-2D3E-48EB-A36B-3E8228A7E746}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {A4869D0B-FE11-495D-A720-DC36AE3CCEBE}

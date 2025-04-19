@@ -1,46 +1,25 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Stefanini.Domain.CityAggregate;
 using Stefanini.Infra.Data;
-using Stefanini.Infra.Data.Repository;
+using Stefanini.Infra.Data.Repository.Base;
 
-namespace Stefanini.Infra.Repository
+namespace Stefanini.Infra.Data.Repository
 {
-    public class CityRepository : BaseRepository<DatabaseContext, CityDomain>, ICityRepository
+    public class CityRepository(Context context) : BaseRepository<City>(context), ICityRepository
     {
-        protected DatabaseContext _context;
-
-        public CityRepository(DatabaseContext context) : base(context)
+        public async Task<(List<City>, int totalItems)> GetPaginatedAsync(int page, int pageSize)
         {
-            _context = context;
-            _context.Database.EnsureCreated();
-        }
+            var query = context.City.AsQueryable();
 
-        public async Task<CityDomain> AddCity(CityDomain city)
-        {
-            _context.City.AddAsync(city);
-            await _context.SaveChangesAsync();
-            return city;
-        }
+            var totalItems = await query.CountAsync();
 
-        public async Task<IEnumerable<CityDomain>> GetAllCities()
-        {
+            var items = await query
+                .OrderBy(x => x.Id) 
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
 
-            var cities = await _context
-                                .City
-                                .AsNoTracking()
-                                .ToListAsync();
-
-            return cities;
-        }
-
-        public async Task<CityDomain> GetCityById(int id)
-        {
-            var city = await _context
-                                .City
-                                .AsNoTracking()
-                                .FirstOrDefaultAsync(p => p.Id == id);
-
-            return city;
+            return (items, totalItems);
         }
 
     }

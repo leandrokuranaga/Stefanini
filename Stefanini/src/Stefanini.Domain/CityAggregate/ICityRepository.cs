@@ -1,9 +1,9 @@
-﻿namespace Stefanini.Domain.CityAggregate
+﻿using Stefanini.Infra.Data;
+
+namespace Stefanini.Domain.CityAggregate
 {
-    public interface ICityRepository : IBaseRepository<CityDomain>
+    public interface ICityRepository : IBaseRepository<City>, IUnitOfWork
     {
-        Task<IEnumerable<CityDomain>> GetAllCities();
-        Task<CityDomain> GetCityById(int id);
-        Task<CityDomain> AddCity(CityDomain city);
+        Task<(List<City>, int totalItems)> GetPaginatedAsync(int page, int pageSize);
     }
 }

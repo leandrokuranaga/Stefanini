@@ -1,48 +1,66 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore.Storage;
 
 namespace Stefanini.Infra.Data
 {
-    public class UnitOfWork : IUnitOfWork
+    public class UnitOfWork(Context context) : IUnitOfWork, IDisposable
     {
-        public DatabaseContext Context { get; set; }
+        private IDbContextTransaction? _transaction;
+        private bool _disposed = false;
 
-        public UnitOfWork(DatabaseContext context)
+        public async Task BeginTransactionAsync()
         {
-            Context = context;
+            if (_transaction is not null) return;
+            _transaction = await context.Database.BeginTransactionAsync();
         }
 
         public async Task CommitAsync()
         {
-            using (var transaction = await Context.Database.BeginTransactionAsync())
+            if (_transaction is not null)
             {
                 try
                 {
-                    await Context.SaveChangesAsync();
-                    await transaction.CommitAsync();
+                    await context.SaveChangesAsync();
+                    await _transaction.CommitAsync();
                 }
                 catch
                 {
-                    await transaction.RollbackAsync();
+                    await _transaction.RollbackAsync();
                     throw;
                 }
+                finally
+                {
+                    await _transaction.DisposeAsync();
+                    _transaction = null;
+                }
+            }
+            else
+            {
+                await context.SaveChangesAsync();
             }
         }
 
-        public async Task CommitWithIdentityInsertAsync(string table)
+        public async Task SaveChangesAsync()
         {
-            using (var transaction = await Context.Database.BeginTransactionAsync())
+            await context.SaveChangesAsync();
+        }
+
+        public async Task RollbackAsync()
+        {
+            if (_transaction is not null)
             {
-                try
-                {
-                    Context.Database.ExecuteSqlRaw($"SET IDENTITY_INSERT {table} ON;");
-                    await Context.SaveChangesAsync();
-                    await transaction.CommitAsync();
-                }
-                catch (Exception ex)
-                {
-                    await transaction.RollbackAsync();
-                    throw;
-                }
+                await _transaction.RollbackAsync();
+                await _transaction.DisposeAsync();
+                _transaction = null;
+            }
+        }
+
+        public void Dispose()
+        {
+            if (!_disposed)
+            {
+                _transaction?.Dispose();
+                context.Dispose();
+                _disposed = true;
             }
         }
     }

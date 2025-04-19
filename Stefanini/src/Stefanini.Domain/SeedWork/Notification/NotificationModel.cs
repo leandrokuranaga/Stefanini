@@ -1,19 +1,31 @@
-﻿using System.Diagnostics.CodeAnalysis;
-
-namespace Stefanini.Domain.SeedWork.Notification
+﻿namespace Stefanini.Domain.SeedWork
 {
-    [ExcludeFromCodeCoverage]
-    public class NotificationModel(string key, string message, NotificationModel.ENotificationType notificationType = NotificationModel.ENotificationType.BusinessRules)
+    public class NotificationModel
     {
         public Guid NotificationId { get; private set; } = Guid.NewGuid();
-        public string Key { get; private set; } = key;
-        public string Message { get; private set; } = message;
-        public ENotificationType NotificationType { get; set; } = notificationType;
+        public ENotificationType NotificationType { get; set; }
 
-        public void UpdateMessage(string message, string key)
+        public List<NotificationMessage> FieldMessages { get; private set; } = new();
+        public List<NotificationMessage> GeneralMessages { get; private set; } = new();
+
+        public void AddMessage(string key, string message)
         {
-            Message = message;
-            Key = key;
+            var msg = new NotificationMessage
+            {
+                Key = key,
+                Message = message
+            };
+
+            if (!string.IsNullOrWhiteSpace(key) && char.IsUpper(key[0]))
+                FieldMessages.Add(msg);
+            else
+                GeneralMessages.Add(msg);
+        }
+
+        public class NotificationMessage
+        {
+            public string Key { get; set; } = null!;
+            public string Message { get; set; } = null!;
         }
 
         public enum ENotificationType : byte
@@ -22,7 +34,7 @@ namespace Stefanini.Domain.SeedWork.Notification
             InternalServerError = 1,
             BusinessRules = 2,
             NotFound = 3,
-            BadRequestError = 4,
+            BadRequestError = 4
         }
     }
 }

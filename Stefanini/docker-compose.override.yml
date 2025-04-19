@@ -1,29 +1,32 @@
 version: '3.4'
 
 services:
-  stefanini.api:
+  app:
+    build:
+      context: .
+      dockerfile: src/Stefanini.API/Dockerfile
+    container_name: stefanini.api
+    ports:
+      - "8080:8080"
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - ASPNETCORE_HTTP_PORTS=8080
-      - ASPNETCORE_HTTPS_PORTS=8081
-    ports:
-      - "8080"
-      - "8081"
-    volumes:
-      - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
-      - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro
+      - ConnectionStrings__DefaultConnection=Host=sqlserver;Port=1433;Database=Stefanini;User Id=${DB_USER};Password=${DB_PASSWORD};TrustServerCertificate=True;
+    depends_on:
+      - sqlserver
+    networks:
+      - stefanini-network
 
   sqlserver:
+    container_name: stefanini-db
     image: mcr.microsoft.com/mssql/server:2022-latest
     environment:
       SA_PASSWORD: ${DB_PASSWORD}
       ACCEPT_EULA: "Y"
     ports:
-      - "1435:1435"
+      - "1435:1433"
+    networks:
+      - stefanini-network
 
-  mssqltools:
-    image: mcr.microsoft.com/mssql-tools
-    depends_on:
-      - sqlserver
-    environment:
-      CONNECTION_STRINGS: ${CONNECTION_STRINGS}
+networks:
+  stefanini-network:
+    driver: bridge

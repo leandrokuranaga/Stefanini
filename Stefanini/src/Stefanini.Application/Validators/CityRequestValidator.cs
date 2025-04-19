@@ -8,14 +8,13 @@ namespace Stefanini.Application.Validators
         public CityRequestValidator()
         {
             RuleFor(x => x.Name)
-                .NotEmpty()
-                .NotNull()
-                .WithMessage("Name is required.");
+                .NotEmpty().WithMessage("Name is required.")
+                .MaximumLength(100).WithMessage("Name must be at most 100 characters.");
 
             RuleFor(x => x.UF)
-                .NotEmpty()
-                .NotNull()
-                .WithMessage("UF is required.");
+                .NotEmpty().WithMessage("UF is required.")
+                .Length(2).WithMessage("UF must be exactly 2 characters.")
+                .Matches("^[A-Z]{2}$").WithMessage("UF must contain only uppercase letters (e.g., SP).");
         }
     }
 }

@@ -3,6 +3,7 @@
   <PropertyGroup>
     <TargetFramework>net9.0</TargetFramework>
     <Nullable>enable</Nullable>
+	<GenerateDocumentationFile>true</GenerateDocumentationFile>
     <ImplicitUsings>enable</ImplicitUsings>
     <UserSecretsId>9972ef27-b15c-4122-aef0-0670dc9c3d47</UserSecretsId>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
@@ -11,10 +12,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Configuration\SwaggerConfig.cs" />
+    <Compile Remove="Extensions\SwaggerConfig.cs" />
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="AspNetCore.HealthChecks.SqlServer" Version="9.0.0" />
     <PackageReference Include="AutoMapper" Version="11.0.1" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning.ApiExplorer" Version="5.0.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.7" />
@@ -29,12 +31,16 @@
     </PackageReference>
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.15.1" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
+    <PackageReference Include="Swashbuckle.AspNetCore.Annotations" Version="8.1.1" />
+    <PackageReference Include="Swashbuckle.AspNetCore.Filters" Version="8.0.2" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Stefanini.Application\Stefanini.Application.csproj" />
     <ProjectReference Include="..\Stefanini.Domain\Stefanini.Domain.csproj" />
+    <ProjectReference Include="..\Stefanini.Infra.CrossCutting.IoC\Stefanini.Infra.CrossCutting.IoC.csproj" />
     <ProjectReference Include="..\Stefanini.Infra.Data\Stefanini.Infra.Data.csproj" />
+    <ProjectReference Include="..\Stefanini.Infra.Utils\Stefanini.Infra.Utils.csproj" />
   </ItemGroup>
 
 </Project>

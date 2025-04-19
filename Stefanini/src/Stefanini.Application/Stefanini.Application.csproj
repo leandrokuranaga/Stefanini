@@ -12,6 +12,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="FluentValidation" Version="11.11.0" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\Stefanini.Domain\Stefanini.Domain.csproj" />
     <ProjectReference Include="..\Stefanini.Infra.Data\Stefanini.Infra.Data.csproj" />
   </ItemGroup>

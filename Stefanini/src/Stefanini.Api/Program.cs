@@ -1,56 +1,49 @@
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
-using Stefanini.Configuration;
-using Stefanini.Infra.Data;
-using Swashbuckle.AspNetCore.SwaggerGen;
+using Stefanini.Infra.Utils;
+using Stefanini.Infra.CrossCutting.IoC;
+using Stefanini.API.Extensions;
+using Stefanini.Api.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Configuration.SetBasePath(Directory.GetCurrentDirectory())
+                     .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
+
+builder.Services.Configure<AppSettings>(builder.Configuration);
+builder.Services.AddSingleton(sp =>
+    sp.GetRequiredService<IOptions<AppSettings>>().Value);
+
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
 
-builder.Services.AddDbContext<DatabaseContext>(opt =>
-    opt.UseSqlServer(builder.Configuration.GetConnectionString("Database")));
+builder.Services.AddHealthChecks()
+    .AddSqlServer(builder.Configuration.GetConnectionString("Database"));
 
-builder.Services.ResolveDependencies();
-builder.Services.AddVersionedApiExplorer(p =>
-{
-    p.GroupNameFormat = "'v'VVV";
-    p.SubstituteApiVersionInUrl = true;
-});
+var appSettings = builder.Configuration.Get<AppSettings>();
 
-builder.Services.AddApiVersioning(cfg =>
-{
-    cfg.DefaultApiVersion = new ApiVersion(1, 1);
-    cfg.AssumeDefaultVersionWhenUnspecified = true;
-    cfg.ReportApiVersions = true;
-});
+builder.Services.AddLocalServices(builder.Configuration);
+builder.Services.AddLocalDbContext(appSettings);
 
+builder.Services.AddApiVersioningConfiguration();
 
-builder.Services.AddTransient<IConfigureOptions<SwaggerGenOptions>, ConfigureSwaggerOptions>();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerDocumentation();
+
 builder.Services.AddControllers();
 
 var app = builder.Build();
 
-app.UseSwagger();
 var provider = app.Services.GetRequiredService<IApiVersionDescriptionProvider>();
 
-// Ativa o Swagger UI
-app.UseSwaggerUI(opt =>
+if (app.Environment.IsDevelopment())
 {
-    foreach (var description in provider.ApiVersionDescriptions)
-    {
-        opt.SwaggerEndpoint(
-        $"/swagger/{description.GroupName}/swagger.json",
-        description.GroupName.ToUpperInvariant());
-    }
-});
+    app.UseSwaggerDocumentation();
+}
 
 app.UseHttpsRedirection();
+
+app.MapHealthChecks("/health");
 
 app.UseAuthorization();
 

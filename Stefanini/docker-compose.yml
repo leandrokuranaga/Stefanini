@@ -2,6 +2,7 @@ version: '3.4'
 
 services:
   stefanini.api:
+    container_name: Stefanini
     image: ${DOCKER_REGISTRY-}stefaniniapi
     build:
       context: .

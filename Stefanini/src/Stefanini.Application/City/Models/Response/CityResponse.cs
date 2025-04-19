@@ -8,13 +8,13 @@ namespace Stefanini.Application.City.Models.Response
         public string? Name { get; set; }
         public string? UF { get; set; }
 
-        public static explicit operator CityResponse(CityDomain city)
+        public static explicit operator CityResponse(Domain.CityAggregate.City city)
         {
             return new CityResponse
             {
                 Id = city.Id,
-                Name = city.Name,
-                UF = city.UF
+                Name = city.Name.Value,
+                UF = city.UF.Value
             };
         }
     }

@@ -6,4 +6,8 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="Abp" Version="10.1.0" />
+  </ItemGroup>
+
 </Project>

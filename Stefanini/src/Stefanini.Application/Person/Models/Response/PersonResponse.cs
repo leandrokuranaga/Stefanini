@@ -1,4 +1,4 @@
-﻿using Stefanini.Domain.PersonAggregate;
+﻿using Stefanini.Domain.CityAggregate.ValueObjects;
 
 namespace Stefanini.Application.Person.Models.Response
 {
@@ -9,14 +9,14 @@ namespace Stefanini.Application.Person.Models.Response
         public string? Cpf { get; set; }
         public int Age { get; set; }
 
-        public static explicit operator PersonResponse(PersonDomain person)
+        public static explicit operator PersonResponse(Domain.CityAggregate.Entity.Person person)
         {
             return new PersonResponse
             {
                 Id = person.Id,
-                Name = person.Name,
-                Cpf = person.CPF,
-                Age = person.Age
+                Name = person.Name.Value,
+                Cpf = person.CPF.Value,
+                Age = person.Age.Value
             };
         }
     }

@@ -1,6 +1,7 @@
 ﻿using FluentValidation;
 using FluentValidation.Results;
 using Stefanini.Application.Validators;
+using Stefanini.Domain.SeedWork;
 using Stefanini.Domain.SeedWork.Exceptions;
 using Stefanini.Domain.SeedWork.Notification;
 using System.Diagnostics.CodeAnalysis;
@@ -10,9 +11,8 @@ namespace Stefanini.Application.Common
     [ExcludeFromCodeCoverage]
     public abstract class BaseService(INotification notification)
     {
-        public virtual ValidationResult ValidationResult { get; protected set; }
-
         protected readonly INotification _notification = notification;
+        public virtual ValidationResult ValidationResult { get; protected set; }
 
         public async Task<T> ExecuteAsync<T>(Func<Task<T>> action)
         {
@@ -20,9 +20,9 @@ namespace Stefanini.Application.Common
             {
                 return await action();
             }
-            catch (ValidatorException)
+            catch (ValidatorException e)
             {
-
+                _notification.AddNotification("Validator Error", e.Message, NotificationModel.ENotificationType.BadRequestError);
             }
             catch (NotFoundException e)
             {

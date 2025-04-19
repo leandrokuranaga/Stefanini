@@ -1,10 +1,10 @@
-﻿using static Stefanini.Domain.SeedWork.Notification.NotificationModel;
+﻿using static Stefanini.Domain.SeedWork.NotificationModel;
 
 namespace Stefanini.Domain.SeedWork.Notification
 {
     public interface INotification
     {
-        List<NotificationModel> ListNotificationModel { get; }
+        NotificationModel NotificationModel { get; }
         bool HasNotification { get; }
         void AddNotification(string key, string message, ENotificationType notificationType);
     }

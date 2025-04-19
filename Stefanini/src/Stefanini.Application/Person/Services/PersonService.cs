@@ -1,81 +1,156 @@
-﻿using Stefanini.Application.Common;
+﻿using Microsoft.Extensions.Caching.Memory;
+using Stefanini.Application.City.Models.Response;
+using Stefanini.Application.Common;
 using Stefanini.Application.Person.Models.Request;
 using Stefanini.Application.Person.Models.Response;
 using Stefanini.Application.Validators;
-using Stefanini.Domain.PersonAggregate;
+using Stefanini.Domain.CityAggregate;
+using Stefanini.Domain.CityAggregate.ValueObjects;
+using Stefanini.Domain.SeedWork;
+using Stefanini.Domain.SeedWork.Enums;
 using Stefanini.Domain.SeedWork.Notification;
 
 namespace Stefanini.Application.Person.Services
 {
-    public class PersonService(IPersonRepository personRepository, INotification notification) : BaseService(notification), IPersonService
+    public class PersonService(IPersonRepository personRepository, INotification notification, IMemoryCache cache) : BaseService(notification), IPersonService
     {
-        private readonly INotification _notification = notification;
-
-        private readonly IPersonRepository _personRepository = personRepository;
-
-        public async Task AddPerson(PersonRequest person)
-        {
-            try
+        public Task<BasePaginatedResponse<List<PersonResponse>>> GetPaginatedAsync(int page, int pageSize) =>
+            ExecuteAsync<BasePaginatedResponse<List<PersonResponse>>>(async () =>
             {
-                Validate(person, new PersonRequestValidator());
-                var personDomain = (PersonDomain)person;
+                var cacheKey = $"{EnumCacheTags.Person}:Page:{page}:Size:{pageSize}";
 
-                await _personRepository.InsertOrUpdateAsync(personDomain);
-            }
-            catch (Exception ex) 
-            {
-                throw new Exception(ex.Message);
-            }
-        }
+                if (cache.TryGetValue(cacheKey, out BasePaginatedResponse<List<PersonResponse>> cached))
+                    return cached;
 
-        public Task<bool> DeletePerson(int id)
+                var (people, totalItems) = await personRepository.GetPaginatedAsync(page, pageSize);
+
+                var result = new BasePaginatedResponse<List<PersonResponse>>
+                {
+                    Data = people.Select(p => (PersonResponse)p).ToList(),
+                    CurrentPage = page,
+                    PageSize = pageSize,
+                    TotalItens = totalItems
+                };
+
+                cache.Set(cacheKey, result, TimeSpan.FromMinutes(5));
+
+                return result;
+            });
+
+        public Task<PersonResponse> GetAsync(int id) => ExecuteAsync(async () =>
         {
-            var deletedPerson = _personRepository.DeletePersonById(id);
-            return deletedPerson;
-        }
+            var cacheKey = $"{EnumCacheTags.Person}:Id:{id}";
 
-        public async Task<List<PersonResponse>> GetAllPeople()
-        {
-            var people = await _personRepository.GetAllAsync();
+            if (cache.TryGetValue(cacheKey, out PersonResponse cached))
+                return cached;
 
-            var results = people.Select(person => (PersonResponse)person).ToList();
-
-            return results;
-        }
-
-        public async Task<PersonResponse> GetPersonById(int id)
-        {
-            var person = await _personRepository.GetByIdAsync(id, false);
+            var person = await personRepository.GetByIdAsync(id, false);
 
             if (person is null)
-                 return null;
+            {
+                notification.AddNotification("Get Person", "Person does not exists", NotificationModel.ENotificationType.BadRequestError);
+                return new PersonResponse();
+            }
 
             var personResponse = (PersonResponse)person;
 
+            cache.Set(cacheKey, personResponse, TimeSpan.FromMinutes(5));
+
             return personResponse;
+        });
+
+
+        public Task<PersonResponse> CreateAsync(PersonRequest person) => ExecuteAsync(async () =>
+        {
+            Validate(person, new PersonRequestValidator());
+
+            var personId = await personRepository.GetAsync(x => x.CPF.Value == person.CPF);
+
+            if (personId.Count() > 0)
+            {
+                notification.AddNotification("Create User", "User already exists", NotificationModel.ENotificationType.BadRequestError);
+                return new PersonResponse();
+            }
+
+            var personDomain = (Domain.CityAggregate.Entity.Person)person;
+
+            await personRepository.InsertOrUpdateAsync(personDomain);
+            await personRepository.SaveChangesAsync();
+
+            ClearPersonCache(personDomain.Id);
+
+            var personResponse = (PersonResponse)personDomain;
+            return (personResponse);
+        });
+
+        public Task<PersonResponse> UpdateAsync(int id, PersonRequest person) => ExecuteAsync(async () =>
+        {
+            Validate(person, new PersonRequestValidator());
+
+            var personExists = await personRepository.GetOneNoTracking(x => x.CPF.Value == person.CPF);
+
+            if (personExists != null && personExists.Id != id)
+            {
+                notification.AddNotification("Update Person", "User already exists", NotificationModel.ENotificationType.BadRequestError);
+                return new PersonResponse();
+            }
+
+            var personFetched = await personRepository.GetByIdAsync(id, noTracking: false);
+
+            if (personFetched == null)
+            {
+                notification.AddNotification("Update User", "User not found", NotificationModel.ENotificationType.NotFound);
+            }
+
+            UpdatePersonProperties(personFetched, person);
+
+            await personRepository.InsertOrUpdateAsync(personFetched);
+            await personRepository.SaveChangesAsync();
+
+            ClearPersonCache(personFetched.Id);
+
+            var personResponse = (PersonResponse)personFetched;
+
+            return personResponse;
+        });
+
+        private void UpdatePersonProperties(Domain.CityAggregate.Entity.Person personDb, PersonRequest person)
+        {
+            personDb.Name = new Name(person.Name);
+            personDb.CPF = new CPF(person.CPF);
+            personDb.Age = new Age(person.Age);
+            personDb.CityId = person.CityId;
         }
 
-        public async Task<bool> UpdatePerson(PersonRequest person, int id)
+        public Task<BaseResponse<object>> DeleteAsync(int id) => ExecuteAsync(async () =>
         {
-            try
+            var person = await personRepository.GetByIdAsync(id, false);
+
+            if (person == null)
             {
-                Validate(person, new PersonRequestValidator());
-                var personDomain = (PersonDomain)person;
+                notification.AddNotification("Delete User", "User not found", NotificationModel.ENotificationType.NotFound);
+                return BaseResponse<object>.Fail(_notification.NotificationModel);
+            }
 
-                await _personRepository.UpdateAsync(personDomain);
+            await personRepository.DeleteAsync(person);
+            await personRepository.SaveChangesAsync();
 
-                return true;
-            } catch (Exception ex)
-            {
-                throw new Exception(ex.Message);
-            } 
-        }
+            ClearPersonCache(person.Id);
 
-        public async Task<bool> AddPersonToCity(int personId, int cityId)
+            return BaseResponse<object>.Ok(null);
+        });
+
+        private void ClearPersonCache(int personId)
         {
-            var updatedPerson = await _personRepository.AddPersonToCity(personId, cityId);
+            cache.Remove($"{EnumCacheTags.Person}:Id:{personId}");
 
-            return updatedPerson;
+            for (int page = 1; page <= 10; page++)
+            {
+                for (int size = 5; size <= 50; size += 5)
+                {
+                    cache.Remove($"{EnumCacheTags.Person}:Page:{page}:Size:{size}");
+                }
+            }
         }
 
     }
