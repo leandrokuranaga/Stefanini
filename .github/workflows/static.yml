@@ -19,13 +19,10 @@ jobs:
           dotnet-version: "8.0.x"
 
       - name: Restore dependencies
-        run: dotnet restore Stefanini.sln
-        working-directory: ./Stefanini
+        run: dotnet restore Stefanini/Stefanini.sln
 
       - name: Build solution
-        run: dotnet build Stefanini.sln --no-restore --configuration Release
-        working-directory: ./Stefanini
+        run: dotnet build Stefanini/Stefanini.sln --no-restore --configuration Release
 
       - name: Run tests
-        run: dotnet test Stefanini.sln --no-build --configuration Release --verbosity normal
-        working-directory: ./Stefanini
+        run: dotnet test Stefanini/Stefanini.sln --no-build --configuration Release --verbosity normal
