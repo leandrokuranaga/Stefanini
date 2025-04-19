@@ -13,6 +13,11 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: List files for debug
+        run: |
+          echo "Estrutura de arquivos:"
+          ls -R
+
       - name: Setup .NET
         uses: actions/setup-dotnet@v3
         with:
