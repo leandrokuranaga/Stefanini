@@ -1,7 +1,7 @@
 ﻿using Stefanini.Application.City.Models.Request;
 using Swashbuckle.AspNetCore.Filters;
 
-namespace Stefanini.API.SwaggerExamples
+namespace Stefanini.API.SwaggerExamples.City
 {
     public class CityRequestExample : IExamplesProvider<CityRequest>
     {

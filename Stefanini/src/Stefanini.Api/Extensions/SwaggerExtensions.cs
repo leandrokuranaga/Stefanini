@@ -1,5 +1,5 @@
 ﻿using Microsoft.OpenApi.Models;
-using Stefanini.API.SwaggerExamples;
+using Stefanini.API.SwaggerExamples.City;
 using Swashbuckle.AspNetCore.Filters;
 using System.Reflection;
 
