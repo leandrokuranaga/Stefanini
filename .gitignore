@@ -8,6 +8,9 @@
 
 .sonarqube/
 
+.vs/
+*.suo
+
 .env
 
 # Ignore Visual Studio folder
