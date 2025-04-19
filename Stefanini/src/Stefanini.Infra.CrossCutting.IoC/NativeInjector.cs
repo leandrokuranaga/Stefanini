@@ -7,6 +7,7 @@ using Stefanini.Domain.CityAggregate;
 using Stefanini.Domain.SeedWork.Notification;
 using Stefanini.Infra.Data;
 using Stefanini.Infra.Data.Repository;
+using Stefanini.Infra.Services;
 using Stefanini.Infra.Utils;
 
 namespace Stefanini.Infra.CrossCutting.IoC
@@ -23,6 +24,9 @@ namespace Stefanini.Infra.CrossCutting.IoC
             #endregion
 
             #region Services
+
+            services.AddSingleton<ICacheService, CacheService>();
+
             services.AddScoped<IPersonService, PersonService>();
             services.AddScoped<ICityService, CityService>();
             #endregion

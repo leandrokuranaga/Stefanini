@@ -1,6 +1,6 @@
 ﻿namespace Stefanini.Tests.Infra_Layer
 {
-    public class CityDomainTests
+    public class PersonTests
     {
     }
 }

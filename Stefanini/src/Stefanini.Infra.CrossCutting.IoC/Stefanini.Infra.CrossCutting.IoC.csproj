@@ -13,6 +13,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Stefanini.Application\Stefanini.Application.csproj" />
     <ProjectReference Include="..\Stefanini.Infra.Data\Stefanini.Infra.Data.csproj" />
+    <ProjectReference Include="..\Stefanini.Infra.Services\Stefanini.Infra.Services.csproj" />
     <ProjectReference Include="..\Stefanini.Infra.Utils\Stefanini.Infra.Utils.csproj" />
   </ItemGroup>
 

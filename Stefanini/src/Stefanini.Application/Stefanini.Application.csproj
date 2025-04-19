@@ -18,6 +18,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Stefanini.Domain\Stefanini.Domain.csproj" />
     <ProjectReference Include="..\Stefanini.Infra.Data\Stefanini.Infra.Data.csproj" />
+    <ProjectReference Include="..\Stefanini.Infra.Services\Stefanini.Infra.Services.csproj" />
   </ItemGroup>
 
 </Project>

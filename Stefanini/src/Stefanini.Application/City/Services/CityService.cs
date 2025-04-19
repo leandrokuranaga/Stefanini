@@ -1,5 +1,4 @@
-﻿using Microsoft.Extensions.Caching.Memory;
-using Stefanini.Application.City.Models.Request;
+﻿using Stefanini.Application.City.Models.Request;
 using Stefanini.Application.City.Models.Response;
 using Stefanini.Application.Common;
 using Stefanini.Application.Validators;
@@ -8,87 +7,81 @@ using Stefanini.Domain.CityAggregate.ValueObjects;
 using Stefanini.Domain.SeedWork;
 using Stefanini.Domain.SeedWork.Enums;
 using Stefanini.Domain.SeedWork.Notification;
+using Stefanini.Infra.Services;
 
 namespace Stefanini.Application.City.Services
 {
-    public class CityService(ICityRepository cityRepository, INotification notification, IMemoryCache cache) : BaseService(notification), ICityService
+    public class CityService(
+        ICityRepository cityRepository,
+        INotification notification,
+        ICacheService cache) : BaseService(notification), ICityService
     {
         public Task<BasePaginatedResponse<List<CityResponse>>> GetPaginatedAsync(int page, int pageSize) =>
             ExecuteAsync<BasePaginatedResponse<List<CityResponse>>>(async () =>
             {
                 var cacheKey = $"{EnumCacheTags.City}:Page:{page}:Size:{pageSize}";
 
-                if (cache.TryGetValue(cacheKey, out BasePaginatedResponse<List<CityResponse>> cached))
-                    return cached;
-
-                var (cities, totalItems) = await cityRepository.GetPaginatedAsync(page, pageSize);
-
-                var result = new BasePaginatedResponse<List<CityResponse>>
+                Func<Task<BasePaginatedResponse<List<CityResponse>>>> factory = async () =>
                 {
-                    Data = cities.Select(c => (CityResponse)c).ToList(),
-                    CurrentPage = page,
-                    PageSize = pageSize,
-                    TotalItens = totalItems
+                    var (cities, totalItems) = await cityRepository.GetPaginatedAsync(page, pageSize);
+
+                    return new BasePaginatedResponse<List<CityResponse>>
+                    {
+                        Data = cities.Select(c => (CityResponse)c).ToList(),
+                        CurrentPage = page,
+                        PageSize = pageSize,
+                        TotalItens = totalItems
+                    };
                 };
 
-                cache.Set(cacheKey, result, TimeSpan.FromMinutes(5));
-
-                return result;
+                return await cache.GetOrSetAsync(cacheKey, factory);
             });
-
 
         public Task<CityResponse> GetAsync(int id) => ExecuteAsync(async () =>
         {
             var cacheKey = $"{EnumCacheTags.City}:Id:{id}";
 
-            if (cache.TryGetValue(cacheKey, out CityResponse cached))
-                return cached;
-
-            var city = await cityRepository.GetByIdAsync(id, false);
-
-            if (city is null)
+            Func<Task<CityResponse>> factory = async () =>
             {
-                notification.AddNotification("Get City", "City does not exists", NotificationModel.ENotificationType.BadRequestError);
-                return new CityResponse();
-            }
+                var city = await cityRepository.GetByIdAsync(id, false);
 
-            var cityResponse = (CityResponse)city;
+                if (city is null)
+                {
+                    notification.AddNotification("Get City", "City does not exists", NotificationModel.ENotificationType.BadRequestError);
+                    return new CityResponse();
+                }
 
-            cache.Set(cacheKey, cityResponse, TimeSpan.FromMinutes(5));
+                return (CityResponse)city;
+            };
 
-            return cityResponse;
+            return await cache.GetOrSetAsync(cacheKey, factory);
         });
 
-        public Task<CityResponse> CreateAsync(CityRequest city) => ExecuteAsync(async () =>
+        public Task<CityResponse> CreateAsync(CityRequest request) => ExecuteAsync(async () =>
         {
-            Validate(city, new CityRequestValidator());
+            Validate(request, new CityRequestValidator());
 
-            var cityId = await cityRepository.GetAsync(x => x.Name.Value == city.Name);
-
-            if (cityId.Count() > 0)
+            var existingCities = await cityRepository.GetAsync(x => x.Name.Value == request.Name);
+            if (existingCities.Any())
             {
                 notification.AddNotification("Create City", "City already exists", NotificationModel.ENotificationType.BadRequestError);
                 return new CityResponse();
             }
 
-            var cityDomain = (Domain.CityAggregate.City)city;
-
+            var cityDomain = (Domain.CityAggregate.City)request;
             await cityRepository.InsertOrUpdateAsync(cityDomain);
             await cityRepository.SaveChangesAsync();
 
-            ClearCityCache(cityDomain.Id);
-
-            var cityResponse = (CityResponse)cityDomain;
-            return cityResponse;
+            await ClearCityCache(cityDomain.Id);
+            return (CityResponse)cityDomain;
         });
 
-        public Task<CityResponse> UpdateAsync(int id, CityRequest city) => ExecuteAsync(async () =>
+        public Task<CityResponse> UpdateAsync(int id, CityRequest request) => ExecuteAsync(async () =>
         {
-            Validate(city, new CityRequestValidator());
+            Validate(request, new CityRequestValidator());
 
-            var cityId = await cityRepository.GetOneNoTracking(x => x.Name.Value == city.Name);
-
-            if (cityId is not null && cityId.Id != id)
+            var cityWithSameName = await cityRepository.GetOneNoTracking(x => x.Name.Value == request.Name);
+            if (cityWithSameName is not null && cityWithSameName.Id != id)
             {
                 notification.AddNotification("Update City", "City already exists", NotificationModel.ENotificationType.BadRequestError);
                 return new CityResponse();
@@ -101,22 +94,13 @@ namespace Stefanini.Application.City.Services
                 return new CityResponse();
             }
 
-            UpdateCityProperties(cityFetched, city);
-
+            UpdateCityProperties(cityFetched, request);
             await cityRepository.InsertOrUpdateAsync(cityFetched);
             await cityRepository.SaveChangesAsync();
 
-            ClearCityCache(id);
-
-            var cityResponse = (CityResponse)cityFetched;
-            return cityResponse;
+            await ClearCityCache(id);
+            return (CityResponse)cityFetched;
         });
-
-        private static void UpdateCityProperties(Domain.CityAggregate.City cityFetched, CityRequest city)
-        {
-            cityFetched.Name = new Name(city.Name);
-            cityFetched.UF = new UF(city.UF);
-        }
 
         public Task<BaseResponse<object>> DeleteAsync(int id) => ExecuteAsync(async () =>
         {
@@ -126,25 +110,26 @@ namespace Stefanini.Application.City.Services
                 notification.AddNotification("Delete City", "City not found", NotificationModel.ENotificationType.NotFound);
                 return new BaseResponse<object>();
             }
+
             await cityRepository.DeleteAsync(cityFetched);
             await cityRepository.SaveChangesAsync();
 
-            ClearCityCache(id);
-
+            await ClearCityCache(id);
             return BaseResponse<object>.Ok(new { message = "City deleted successfully" });
         });
 
-        private void ClearCityCache(int cityId)
+        private static void UpdateCityProperties(Domain.CityAggregate.City cityFetched, CityRequest request)
         {
-            cache.Remove($"{EnumCacheTags.City}:Id:{cityId}");
+            cityFetched.Name = new Name(request.Name);
+            cityFetched.UF = new UF(request.UF);
+        }
 
-            for (int page = 1; page <= 10; page++)
-            {
-                for (int size = 5; size <= 50; size += 5)
-                {
-                    cache.Remove($"{EnumCacheTags.City}:Page:{page}:Size:{size}");
-                }
-            }
+        private async Task ClearCityCache(int cityId)
+        {
+            await cache.RemoveAsync(
+                $"{EnumCacheTags.City}:Id:{cityId}",
+                $"{EnumCacheTags.City}:Page:*"
+            );
         }
     }
 }
