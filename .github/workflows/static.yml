@@ -20,12 +20,12 @@ jobs:
 
       - name: Restore dependencies
         run: dotnet restore Stefanini.sln
-        working-directory: ./Stefanini
+        working-directory: ./Stefanini/Stefanini
 
       - name: Build solution
         run: dotnet build Stefanini.sln --no-restore --configuration Release
-        working-directory: ./Stefanini
+        working-directory: ./Stefanini/Stefanini
 
       - name: Run tests
         run: dotnet test Stefanini.sln --no-build --configuration Release --verbosity normal
-        working-directory: ./Stefanini
+        working-directory: ./Stefanini/Stefanini
