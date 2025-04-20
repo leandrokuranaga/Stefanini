@@ -1,0 +1,19 @@
+@for(item of person$ | async; track $index) {
+<div class="flex mb-2 ml-20">
+  <p>{{item.id}}</p>
+  <p>{{item.name}}</p>
+  <p>{{item.cpf}}</p>
+  <p>{{item.age}}</p>
+  @if (item.cityName == null) {
+  <p-button label="Cadastrar cidade" (click)="displayModal(item.id)" />
+  }
+  @else {
+  <p>{{ item.cityName }} - {{ item.uf }} <button>Editar</button> <button>Excluir</button></p>
+  }
+</div>
+}
+
+<p-dialog header="Selecione uma cidade" [(visible)]="cityDialogVisible" [modal]="true" [style]="{ width: '40vw' }"
+  (onHide)="closeModal()">
+  <app-modal-cities (onSelect)="onCitySelected($event)" />
+</p-dialog>

@@ -1,10 +1,12 @@
-﻿namespace Stefanini.Application.Common
+﻿using Stefanini.Domain.SeedWork;
+
+public class BasePaginatedResponse<T>
 {
-    public class BasePaginatedResponse<T> : BaseResponse<T>
-    {
-        public decimal TotalPages => Math.Ceiling((decimal)TotalItens / PageSize);
-        public int CurrentPage { get; set; }
-        public int PageSize { get; set; }
-        public int TotalItens { get; set; }
-    }
+    public bool Success { get; set; } = true;
+    public T? Data { get; set; }
+    public int CurrentPage { get; set; }
+    public int PageSize { get; set; }
+    public int TotalItens { get; set; }
+    public decimal TotalPages => Math.Ceiling((decimal)TotalItens / PageSize);
+    public NotificationModel? Error { get; set; }
 }

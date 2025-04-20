@@ -34,7 +34,7 @@ namespace Stefanini.Controllers
         public async Task<IActionResult> GetAllCities([FromQuery] int page = 1, int size = 10)
         {
             var cities = await cityService.GetPaginatedAsync(page, size);
-            return Response(BaseResponse<BasePaginatedResponse<List<CityResponse>>>.Ok(cities));
+            return Ok(cities); 
         }
 
         /// <summary>

@@ -32,7 +32,7 @@ namespace Stefanini.Controllers
         public async Task<IActionResult> GetAllPeople([FromQuery]int page = 1, int size = 10)
         {
             var people = await personService.GetPaginatedAsync(page, size);
-            return Response(BaseResponse<BasePaginatedResponse<List<PersonResponse>>>.Ok(people));
+            return Ok(people);
         }
 
         /// <summary>

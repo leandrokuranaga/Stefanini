@@ -8,7 +8,8 @@ namespace Stefanini.Application.Person.Models.Response
         public string Name { get; set; }
         public string Cpf { get; set; }
         public int Age { get; set; }
-        public int? CityId { get; set; }
+        public string? CityName { get; set; }
+        public string? UF { get; set; }
 
         public static explicit operator PersonResponse(Domain.CityAggregate.Entity.Person person)
         {
@@ -18,7 +19,8 @@ namespace Stefanini.Application.Person.Models.Response
                 Name = person.Name.Value,
                 Cpf = person.CPF.Value,
                 Age = person.Age.Value,
-                CityId = person.CityId
+                CityName = person.City?.Name?.Value,
+                UF = person.City?.UF?.Value
             };
         }
     }
