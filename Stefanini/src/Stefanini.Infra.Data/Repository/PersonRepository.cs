@@ -9,8 +9,9 @@ namespace Stefanini.Infra.Data.Repository
     {
         public async Task<(List<Person>, int totalItems)> GetPaginatedAsync(int page, int pageSize)
         {
-            var query = context.Person.AsQueryable();
-
+            var query = context.Person
+                  .Include(p => p.City)
+                  .AsNoTracking();
             var totalItems = await query.CountAsync();
 
             var items = await query

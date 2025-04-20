@@ -17,7 +17,7 @@ namespace Stefanini.Application.City.Services
         ICacheService cache) : BaseService(notification), ICityService
     {
         public Task<BasePaginatedResponse<List<CityResponse>>> GetPaginatedAsync(int page, int pageSize) =>
-            ExecuteAsync<BasePaginatedResponse<List<CityResponse>>>(async () =>
+            ExecuteAsync(async () =>
             {
                 var cacheKey = $"{EnumCacheTags.City}:Page:{page}:Size:{pageSize}";
 
@@ -30,12 +30,14 @@ namespace Stefanini.Application.City.Services
                         Data = cities.Select(c => (CityResponse)c).ToList(),
                         CurrentPage = page,
                         PageSize = pageSize,
-                        TotalItens = totalItems
+                        TotalItens = totalItems,
+                        Success = true
                     };
                 };
 
                 return await cache.GetOrSetAsync(cacheKey, factory);
             });
+
 
         public Task<CityResponse> GetAsync(int id) => ExecuteAsync(async () =>
         {

@@ -1,0 +1,7 @@
+@for (item of city$ | async; track $index) {
+<div class="flex mb-2 ml-20">
+  <p>{{item.id}}</p>
+  <p>{{item.name}}</p>
+  <p>{{item.uf}}</p>
+</div>
+}

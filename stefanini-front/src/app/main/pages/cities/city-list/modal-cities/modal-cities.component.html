@@ -1,0 +1,8 @@
+<div class="space-y-2">
+  @for(city of cities$ | async; track $index) {
+  <div class="flex justify-between items-center border p-2 rounded">
+    <span>{{ city.name }} - {{ city.uf }}</span>
+    <button class="bg-blue-600 text-white px-3 py-1 rounded" (click)="selectCity(city)">Selecionar</button>
+  </div>
+  }
+</div>
